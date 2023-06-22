@@ -5,17 +5,27 @@ using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+using TMPro;
 
 // Sets the script to be executed later than all default scripts
 // This is helpful for UI, since other things may need to be initialized before setting the UI
 [DefaultExecutionOrder(1000)]
 public class UImenuHandler : MonoBehaviour
 {
+    [SerializeField] private GameObject UsernameInputField;
+    private TMP_InputField UsernameInput;
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        UsernameInput = UsernameInputField.GetComponent<TMP_InputField>();
+    }
 
-
-
-
+    // ENTER NAME INPUT FIELD
+    public void SaveUsername()
+    {
+        DataManager.Instance.currentUsername = UsernameInput.text;
+    }
 
     // START BUTTON
     public void StartNewGame()
@@ -46,11 +56,7 @@ public class UImenuHandler : MonoBehaviour
 
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+
 
     // Update is called once per frame
     void Update()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 public class MainManager : MonoBehaviour
 {
@@ -11,7 +12,9 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text BestScoreText;
     public GameObject GameOverText;
+    public Text NewHighScoreText;
     
     private bool m_Started = false;
     private int m_Points;
@@ -22,6 +25,9 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        BestScoreText.text = $"Best Score: {DataManager.Instance.bestScoreUsername} {DataManager.Instance.highScores[DataManager.Instance.highScores.Length-1]}";
+        ScoreText.text = $"{DataManager.Instance.currentUsername}'s Score: {m_Points}";
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -45,7 +51,7 @@ public class MainManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 m_Started = true;
-                float randomDirection = Random.Range(-1.0f, 1.0f);
+                float randomDirection = UnityEngine.Random.Range(-1.0f, 1.0f);
                 Vector3 forceDir = new Vector3(randomDirection, 1, 0);
                 forceDir.Normalize();
 
@@ -59,22 +65,39 @@ public class MainManager : MonoBehaviour
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
-            else if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                SceneManager.LoadScene(0);
-            }
         }
     }
 
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        ScoreText.text = $"{DataManager.Instance.currentUsername}'s Score: {m_Points}";
     }
 
     public void GameOver()
     {
         m_GameOver = true;
+        CheckScore();
         GameOverText.SetActive(true);
+    }
+
+    void CheckScore()
+    {
+        if (m_Points > DataManager.Instance.highScores[DataManager.Instance.highScores.Length-1])
+        {
+            // NEW HIGH SCORE!
+            NewHighScoreText.gameObject.SetActive(true);
+            DataManager.Instance.bestScoreUsername = DataManager.Instance.currentUsername;
+        }
+        if (m_Points > DataManager.Instance.highScores[0])
+        {
+            DataManager.Instance.highScores[0] = m_Points;
+            Array.Sort(DataManager.Instance.highScores);
+        }
+    }
+
+    public void goBackToMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 }
