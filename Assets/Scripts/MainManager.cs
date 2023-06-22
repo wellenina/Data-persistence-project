@@ -21,12 +21,19 @@ public class MainManager : MonoBehaviour
     
     private bool m_GameOver = false;
 
+    private AudioSource mainAudio;
+    [SerializeField] private AudioClip brickSound;
+    [SerializeField] private AudioClip gameOverSound;
+    [SerializeField] private AudioClip buttonSound;
+
     
     // Start is called before the first frame update
     void Start()
     {
         BestScoreText.text = $"Best Score: {DataManager.Instance.bestScoreUsername} {DataManager.Instance.highScores[DataManager.Instance.highScores.Length-1]}";
         ScoreText.text = $"{DataManager.Instance.currentUsername}'s Score: {m_Points}";
+
+        mainAudio = GetComponent<AudioSource>();
 
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
@@ -72,10 +79,12 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"{DataManager.Instance.currentUsername}'s Score: {m_Points}";
+        mainAudio.PlayOneShot(brickSound, 1.0f);
     }
 
     public void GameOver()
     {
+        mainAudio.PlayOneShot(gameOverSound, 1.0f);
         m_GameOver = true;
         CheckScore();
         GameOverText.SetActive(true);
@@ -98,6 +107,7 @@ public class MainManager : MonoBehaviour
 
     public void goBackToMenu()
     {
+        mainAudio.PlayOneShot(buttonSound, 1.0f);
         SceneManager.LoadScene(0);
     }
 }
