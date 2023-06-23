@@ -14,7 +14,7 @@ public class MainManager : MonoBehaviour
     public Text ScoreText;
     public Text BestScoreText;
     public GameObject GameOverText;
-    public Text NewHighScoreText;
+    public GameObject NewHighScoreText;
     
     private bool m_Started = false;
     private int m_Points;
@@ -26,12 +26,31 @@ public class MainManager : MonoBehaviour
     [SerializeField] private AudioClip gameOverSound;
     [SerializeField] private AudioClip buttonSound;
 
+    private string username;
+
     
     // Start is called before the first frame update
     void Start()
     {
-        BestScoreText.text = $"Best Score: {DataManager.Instance.bestScoreUsername} {DataManager.Instance.highScores[DataManager.Instance.highScores.Length-1]}";
-        ScoreText.text = $"{DataManager.Instance.currentUsername}'s Score: {m_Points}";
+        if (!String.IsNullOrEmpty(DataManager.Instance.currentUsername))
+        {
+            username = DataManager.Instance.currentUsername;
+        }
+        else
+        {
+            username = "Anonymous Player";
+        }
+
+        ScoreText.text = $"{username}'s Score: {m_Points}";
+
+        if (!String.IsNullOrEmpty(DataManager.Instance.bestScoreUsername))
+        {
+            BestScoreText.text = $"Best Score: {DataManager.Instance.bestScoreUsername} {DataManager.Instance.highScores[DataManager.Instance.highScores.Length-1]}";
+        }
+        else
+        {
+            BestScoreText.text = "";
+        }
 
         mainAudio = GetComponent<AudioSource>();
 
@@ -78,7 +97,7 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"{DataManager.Instance.currentUsername}'s Score: {m_Points}";
+        ScoreText.text = $"{username}'s Score: {m_Points}";
         mainAudio.PlayOneShot(brickSound, 1.0f);
     }
 
@@ -95,8 +114,8 @@ public class MainManager : MonoBehaviour
         if (m_Points > DataManager.Instance.highScores[DataManager.Instance.highScores.Length-1])
         {
             // NEW HIGH SCORE!
-            NewHighScoreText.gameObject.SetActive(true);
-            DataManager.Instance.bestScoreUsername = DataManager.Instance.currentUsername;
+            NewHighScoreText.SetActive(true);
+            DataManager.Instance.bestScoreUsername = username;
         }
         if (m_Points > DataManager.Instance.highScores[0])
         {

@@ -8,16 +8,7 @@ public class DataManager : MonoBehaviour
     public static DataManager Instance;
     public string currentUsername;
     public string bestScoreUsername;
-    public int highestScore = 99;
-    public int[] highScores = new int[5];
-
-    // ONLY FOR TESTING
-    void Start()
-    {
-        currentUsername = "Giulia";
-        bestScoreUsername = "Matteo";
-        highScores = new int[] {1, 5, 10, 15, 30};
-    }
+    public int[] highScores = {0, 0, 0, 0, 0};
 
     private void Awake()
     {
@@ -38,7 +29,6 @@ public class DataManager : MonoBehaviour
     class SavedData
     {
         public string bestScoreUsername;
-        public int highestScore;
         public int[] highScores;
         
     }
@@ -47,7 +37,6 @@ public class DataManager : MonoBehaviour
     {
         SavedData data = new SavedData();
         data.bestScoreUsername = bestScoreUsername;
-        data.highestScore = highestScore;
         data.highScores = highScores;
 
         string jsonStr = JsonUtility.ToJson(data);
@@ -64,7 +53,6 @@ public class DataManager : MonoBehaviour
             SavedData data = JsonUtility.FromJson<SavedData>(jsonStr);
 
             bestScoreUsername = data.bestScoreUsername;
-            highestScore = data.highestScore;
             highScores = data.highScores;
         }
     }

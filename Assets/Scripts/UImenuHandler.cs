@@ -30,6 +30,7 @@ public class UImenuHandler : MonoBehaviour
     // START BUTTON
     public void StartNewGame()
     {
+        SaveUsername();
         SceneManager.LoadScene(1);
     }
 
@@ -42,7 +43,7 @@ public class UImenuHandler : MonoBehaviour
     // EXIT BUTTON
     public void Exit()
     {
-        //MainManager.Instance.SaveColor(); 
+        DataManager.Instance.SaveData();
 
     #if UNITY_EDITOR
         EditorApplication.ExitPlaymode();
