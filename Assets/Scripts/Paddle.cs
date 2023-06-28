@@ -6,11 +6,12 @@ public class Paddle : MonoBehaviour
 {
     public float Speed = 2.0f;
     public float MaxMovement = 2.0f;
+    private MainManager mainManagerScript;
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        mainManagerScript = GameObject.Find("MainManager").GetComponent<MainManager>();
     }
 
     // Update is called once per frame
@@ -27,5 +28,14 @@ public class Paddle : MonoBehaviour
             pos.x = -MaxMovement;
 
         transform.position = pos;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        int bricksCount = FindObjectsOfType<Brick>().Length;
+        if (bricksCount == 0)
+        {
+            mainManagerScript.InstantiateBricks();
+        }
     }
 }
